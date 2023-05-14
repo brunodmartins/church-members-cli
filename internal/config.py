@@ -11,3 +11,8 @@ def save_config(config):
         os.makedirs(CONFIG_FOLDER)
     with open(CONFIG_PATH, "w+") as f:
         f.write(json.dumps(config))
+
+
+def read_config():
+    with open(CONFIG_PATH, "r") as f:
+        return json.load(f)
