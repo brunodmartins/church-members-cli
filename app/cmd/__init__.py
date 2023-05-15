@@ -1,7 +1,7 @@
 import click
 
-from internal import service
-from internal.config import save_config, CONFIG_PATH
+from app.internal import service
+from app.internal.config import save_config, CONFIG_PATH
 
 
 @click.command()

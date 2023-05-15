@@ -1,6 +1,6 @@
 import requests
 
-from internal.config import read_config
+from app.internal.config import read_config
 
 
 def get_token(user, password):

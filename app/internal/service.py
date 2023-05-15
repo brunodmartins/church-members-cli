@@ -1,5 +1,5 @@
-from internal import api
-from internal.config import CONFIG_FOLDER
+from app.internal import api
+from app.internal.config import CONFIG_FOLDER
 
 
 def login(user, password):
