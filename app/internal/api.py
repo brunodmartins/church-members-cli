@@ -1,7 +1,7 @@
 import requests
 
 from app.internal.config import read_config
-from app.internal.domain.exception import ForbiddenException
+from app.internal.domain.exception import ForbiddenException, NotFoundException
 
 
 def get_token(user, password):
@@ -15,7 +15,7 @@ def get_token(user, password):
     headers = {"church_id": church_id}
     response = session.get(url, headers=headers)
     if response.status_code == 404:
-        raise Exception("User not found")
+        raise NotFoundException(f"User {user} not found")
     if response.status_code != 201:
         message = response.text
         raise Exception(
@@ -31,7 +31,7 @@ def get_member(member_id, token):
     headers = {"X-Auth-Token": token}
     response = requests.get(url, headers=headers)
     if response.status_code == 404:
-        raise Exception("Member not found")
+        raise NotFoundException(f"Member {member_id} not found")
     if response.status_code == 403:
         raise ForbiddenException("Forbidden. Please, check login information")
     if response.status_code != 200:
