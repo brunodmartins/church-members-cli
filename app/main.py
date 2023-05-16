@@ -11,3 +11,6 @@ def cli():
 cli.add_command(setup)
 cli.add_command(login)
 cli.add_command(get_member)
+
+if __name__ == "__main__":
+    cli()
