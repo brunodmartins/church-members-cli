@@ -1,7 +1,10 @@
 MOCK_HOST = "http://localhost:9999"
+MOCK_CHURCH_ID = "test-church"
 MEMBER_ID = "fake-member-id"
 TOKEN = "fake-token"
-MOCK_CONFIG = {"host": MOCK_HOST, "church_id": "test-chuch"}
+USER = "fake-user"
+PASSWORD = "fake-password"
+MOCK_CONFIG = {"host": MOCK_HOST, "church_id": MOCK_CHURCH_ID}
 
 MOCK_MEMBER = {
     "id": MEMBER_ID,

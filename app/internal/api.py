@@ -1,3 +1,5 @@
+import base64
+
 import requests
 
 from app.internal.config import read_config
@@ -8,12 +10,12 @@ def get_token(user, password):
     config = read_config()
     host = config["host"]
     church_id = config["church_id"]
-    session = requests.Session()
-    session.auth = (user, password)
+
+    auth_header = base64.b64encode(f"{user}:{password}".encode()).decode("utf-8")
 
     url = f"{host}/users/token"
-    headers = {"church_id": church_id}
-    response = session.get(url, headers=headers)
+    headers = {"church_id": church_id, "Authorization": f"Basic {auth_header}"}
+    response = requests.get(url, headers=headers)
     if response.status_code == 404:
         raise NotFoundException(f"User {user} not found")
     if response.status_code != 201:
