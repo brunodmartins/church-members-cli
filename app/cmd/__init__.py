@@ -2,7 +2,7 @@ import logging
 
 import click
 
-from app.internal import service
+from app.internal import service, api
 from app.internal.config import save_config, CONFIG_PATH
 
 
@@ -23,7 +23,9 @@ def setup(host, church_id):
 @click.option("--password", prompt="Password", help="The password", hide_input=True)
 def login(user, password):
     try:
-        service.login(user, password)
+        service.AuthenticationService(gateway=api.ChurchMembersGateway()).login(
+            user, password
+        )
         click.echo("Login done")
     except Exception as e:
         click.echo(click.style(e, fg="red"), err=True, color=True)
@@ -34,7 +36,9 @@ def login(user, password):
 @click.option("--member-id", prompt="Member ID", help="The member ID")
 def get_member(member_id):
     try:
-        service.get_member(member_id)
+        service.ChurchMembersService(gateway=api.ChurchMembersGateway()).get_member(
+            member_id
+        )
     except Exception as e:
         click.echo(click.style(e, fg="red"), err=True, color=True)
         logging.exception("Error getting member")
