@@ -1,9 +1,9 @@
-from app.internal import api
+from app.internal.api import ChurchMembersGateway
 from app.internal.config import CONFIG_FOLDER
 
 
 def login(user, password):
-    token = api.get_token(user, password)
+    token = ChurchMembersGateway().get_token(user, password)
     save_token(token)
 
 
@@ -18,4 +18,4 @@ def get_token():
 
 
 def get_member(member_id):
-    print(api.get_member(member_id, get_token()))
+    print(ChurchMembersGateway().get_member(member_id, get_token()))
