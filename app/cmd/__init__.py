@@ -36,8 +36,9 @@ def login(user, password):
 @click.option("--member-id", prompt="Member ID", help="The member ID")
 def get_member(member_id):
     try:
+        token = service.AuthenticationService().get_token()
         service.ChurchMembersService(gateway=api.ChurchMembersGateway()).get_member(
-            member_id
+            member_id, token
         )
     except Exception as e:
         click.echo(click.style(e, fg="red"), err=True, color=True)
