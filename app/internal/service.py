@@ -7,7 +7,7 @@ class ChurchMembersService:
         self.gateway = gateway
 
     def get_member(self, member_id, token):
-        print(self.gateway.get_member(member_id, token))
+        return self.gateway.get_member(member_id, token)
 
 
 class AuthenticationService:

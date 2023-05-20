@@ -1,3 +1,4 @@
+import json
 import logging
 
 import click
@@ -16,7 +17,11 @@ __member_service = service.ChurchMembersService(__gateway)
 def setup(host, church_id):
     try:
         Configuration.save_config({"host": host, "church_id": church_id})
-        click.echo(f"Setup saved on {CONFIG_PATH}")
+        click.echo(
+            click.style(f"Setup saved on {CONFIG_PATH}", fg="green"),
+            err=True,
+            color=True,
+        )
     except Exception as e:
         click.echo(click.style(e, fg="red"), err=True, color=True)
         logging.exception("Error storing config")
@@ -28,7 +33,7 @@ def setup(host, church_id):
 def login(user, password):
     try:
         __authentication_service.login(user, password)
-        click.echo("Login done")
+        click.echo(click.style("Login done", fg="green"), err=True, color=True)
     except Exception as e:
         click.echo(click.style(e, fg="red"), err=True, color=True)
         logging.exception("Error doing login")
@@ -39,7 +44,8 @@ def login(user, password):
 def get_member(member_id):
     try:
         token = __authentication_service.get_token()
-        __member_service.get_member(member_id, token)
+        member = __member_service.get_member(member_id, token)
+        click.echo(json.dumps(member, indent=4, sort_keys=True, ensure_ascii=False))
     except Exception as e:
         click.echo(click.style(e, fg="red"), err=True, color=True)
         logging.exception("Error getting member")
