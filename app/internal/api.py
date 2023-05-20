@@ -2,13 +2,13 @@ import base64
 
 import requests
 
-from app.internal.config import read_config
+from app.internal.config import Configuration
 from app.internal.domain.exception import ForbiddenException, NotFoundException
 
 
 class ChurchMembersGateway:
     def get_token(self, user, password):
-        config = read_config()
+        config = Configuration.read_config()
         host = config["host"]
         church_id = config["church_id"]
 
@@ -27,7 +27,7 @@ class ChurchMembersGateway:
         return response.json()["token"]
 
     def get_member(self, member_id, token):
-        config = read_config()
+        config = Configuration.read_config()
         host = config["host"]
         url = f"{host}/members/{member_id}"
         headers = {"X-Auth-Token": token}

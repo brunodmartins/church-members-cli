@@ -22,7 +22,7 @@ class APITestCase(unittest.TestCase):
         super().__init__(method_name)
         self.gateway = ChurchMembersGateway()
 
-    @patch("app.internal.api.read_config", return_value=MOCK_CONFIG)
+    @patch("app.internal.api.Configuration.read_config", return_value=MOCK_CONFIG)
     @patch("app.internal.api.requests")
     def test_get_member_success(self, requests, read_config):
         mock_response = Response()
@@ -34,7 +34,7 @@ class APITestCase(unittest.TestCase):
             f"{MOCK_HOST}/members/{MEMBER_ID}", headers={"X-Auth-Token": TOKEN}
         )
 
-    @patch("app.internal.api.read_config", return_value=MOCK_CONFIG)
+    @patch("app.internal.api.Configuration.read_config", return_value=MOCK_CONFIG)
     @patch("app.internal.api.requests")
     def test_get_member_fails(self, requests, read_config):
         test_cases = {403: ForbiddenException, 404: NotFoundException, 500: Exception}
@@ -48,7 +48,7 @@ class APITestCase(unittest.TestCase):
                 f"{MOCK_HOST}/members/{MEMBER_ID}", headers={"X-Auth-Token": TOKEN}
             )
 
-    @patch("app.internal.api.read_config", return_value=MOCK_CONFIG)
+    @patch("app.internal.api.Configuration.read_config", return_value=MOCK_CONFIG)
     @patch("app.internal.api.requests")
     def test_get_token_success(self, requests, read_config):
         mock_response = Response()
@@ -64,7 +64,7 @@ class APITestCase(unittest.TestCase):
             },
         )
 
-    @patch("app.internal.api.read_config", return_value=MOCK_CONFIG)
+    @patch("app.internal.api.Configuration.read_config", return_value=MOCK_CONFIG)
     @patch("app.internal.api.requests")
     def test_get_token_fails(self, requests, read_config):
         test_cases = {404: NotFoundException, 500: Exception}

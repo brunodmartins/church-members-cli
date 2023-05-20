@@ -3,7 +3,7 @@ import logging
 import click
 
 from app.internal import service, api
-from app.internal.config import save_config, CONFIG_PATH
+from app.internal.config import CONFIG_PATH, Configuration
 
 
 @click.command()
@@ -11,7 +11,7 @@ from app.internal.config import save_config, CONFIG_PATH
 @click.option("--church-id", prompt="Church ID", help="The church ID")
 def setup(host, church_id):
     try:
-        save_config({"host": host, "church_id": church_id})
+        Configuration.save_config({"host": host, "church_id": church_id})
         click.echo(f"Setup saved on {CONFIG_PATH}")
     except Exception as e:
         click.echo(click.style(e, fg="red"), err=True, color=True)
