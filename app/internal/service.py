@@ -3,7 +3,7 @@ from app.internal.config import CONFIG_FOLDER
 
 
 class ChurchMembersService:
-    def __init__(self, gateway: ChurchMembersGateway = None):
+    def __init__(self, gateway: ChurchMembersGateway):
         self.gateway = gateway
 
     def get_member(self, member_id, token):
@@ -11,7 +11,7 @@ class ChurchMembersService:
 
 
 class AuthenticationService:
-    def __init__(self, gateway: ChurchMembersGateway = None):
+    def __init__(self, gateway: ChurchMembersGateway):
         self.gateway = gateway
 
     def login(self, user, password):
