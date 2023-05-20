@@ -7,7 +7,17 @@ from app.internal.domain.exception import ForbiddenException, NotFoundException
 
 
 class ChurchMembersGateway:
-    def get_token(self, user, password):
+    """
+    A gateway to access the church-members-api via HTTP requests
+    """
+
+    def get_token(self, user: str, password: str) -> str:
+        """
+        Obtain an access token to a giver user
+        :param user: The username
+        :param password: The user password
+        :return: The access token
+        """
         config = Configuration.read_config()
         host = config["host"]
         church_id = config["church_id"]
@@ -26,7 +36,13 @@ class ChurchMembersGateway:
             )
         return response.json()["token"]
 
-    def get_member(self, member_id, token):
+    def get_member(self, member_id: str, token: str) -> object:
+        """
+        Get a member information
+        :param member_id:  The member ID
+        :param token: The access token
+        :return: A member information as JSON
+        """
         config = Configuration.read_config()
         host = config["host"]
         url = f"{host}/members/{member_id}"
