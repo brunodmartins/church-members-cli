@@ -20,11 +20,13 @@ from tests.internal import (
 class APITestCase(unittest.TestCase):
     def __init__(self, method_name="runTest"):
         super().__init__(method_name)
-        self.gateway = ChurchMembersGateway()
+        with patch(
+                "app.internal.api.Configuration.read_config", return_value=MOCK_CONFIG
+        ):
+            self.gateway = ChurchMembersGateway()
 
-    @patch("app.internal.api.Configuration.read_config", return_value=MOCK_CONFIG)
     @patch("app.internal.api.requests")
-    def test_get_member_success(self, requests, read_config):
+    def test_get_member_success(self, requests):
         mock_response = Response()
         mock_response.status_code = 200
         mock_response.json = MagicMock(return_value=MOCK_MEMBER)
@@ -34,9 +36,8 @@ class APITestCase(unittest.TestCase):
             f"{MOCK_HOST}/members/{MEMBER_ID}", headers={"X-Auth-Token": TOKEN}
         )
 
-    @patch("app.internal.api.Configuration.read_config", return_value=MOCK_CONFIG)
     @patch("app.internal.api.requests")
-    def test_get_member_fails(self, requests, read_config):
+    def test_get_member_fails(self, requests):
         test_cases = {403: ForbiddenException, 404: NotFoundException, 500: Exception}
         for status_code in test_cases.keys():
             mock_response = Response()
@@ -48,9 +49,8 @@ class APITestCase(unittest.TestCase):
                 f"{MOCK_HOST}/members/{MEMBER_ID}", headers={"X-Auth-Token": TOKEN}
             )
 
-    @patch("app.internal.api.Configuration.read_config", return_value=MOCK_CONFIG)
     @patch("app.internal.api.requests")
-    def test_get_token_success(self, requests, read_config):
+    def test_get_token_success(self, requests):
         mock_response = Response()
         mock_response.status_code = 201
         mock_response.json = MagicMock(return_value={"token": TOKEN})
@@ -64,9 +64,8 @@ class APITestCase(unittest.TestCase):
             },
         )
 
-    @patch("app.internal.api.Configuration.read_config", return_value=MOCK_CONFIG)
     @patch("app.internal.api.requests")
-    def test_get_token_fails(self, requests, read_config):
+    def test_get_token_fails(self, requests):
         test_cases = {404: NotFoundException, 500: Exception}
         for status_code in test_cases.keys():
             mock_response = Response()

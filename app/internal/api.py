@@ -11,6 +11,11 @@ class ChurchMembersGateway:
     A gateway to access the church-members-api via HTTP requests
     """
 
+    def __init__(self):
+        config = Configuration.read_config()
+        self.host = config["host"]
+        self.church_id = config["church_id"]
+
     def get_token(self, user: str, password: str) -> str:
         """
         Obtain an access token to a giver user
@@ -18,14 +23,11 @@ class ChurchMembersGateway:
         :param password: The user password
         :return: The access token
         """
-        config = Configuration.read_config()
-        host = config["host"]
-        church_id = config["church_id"]
 
         auth_header = base64.b64encode(f"{user}:{password}".encode()).decode("utf-8")
 
-        url = f"{host}/users/token"
-        headers = {"church_id": church_id, "Authorization": f"Basic {auth_header}"}
+        url = f"{self.host}/users/token"
+        headers = {"church_id": self.church_id, "Authorization": f"Basic {auth_header}"}
         response = requests.get(url, headers=headers)
         if response.status_code == 404:
             raise NotFoundException(f"User {user} not found")
@@ -43,9 +45,7 @@ class ChurchMembersGateway:
         :param token: The access token
         :return: A member information as JSON
         """
-        config = Configuration.read_config()
-        host = config["host"]
-        url = f"{host}/members/{member_id}"
+        url = f"{self.host}/members/{member_id}"
         headers = {"X-Auth-Token": token}
         response = requests.get(url, headers=headers)
         if response.status_code == 404:
