@@ -38,7 +38,7 @@ class ChurchMembersGateway:
             )
         return response.json()["token"]
 
-    def get_member(self, member_id: str, token: str) -> object:
+    def get_member(self, member_id: str, token: str) -> dict:
         """
         Get a member information
         :param member_id:  The member ID

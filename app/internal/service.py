@@ -10,7 +10,7 @@ class ChurchMembersService:
     def __init__(self, gateway: ChurchMembersGateway):
         self.gateway = gateway
 
-    def get_member(self, member_id: str, token: str) -> object:
+    def get_member(self, member_id: str, token: str) -> dict:
         """
         Gets a member
         :param member_id: The member ID
