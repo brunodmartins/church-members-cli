@@ -37,7 +37,8 @@ class AuthenticationService:
         token = self.gateway.get_token(user, password)
         self.__save_token(token)
 
-    def get_token(self) -> str:
+    @staticmethod
+    def get_token() -> str:
         """
         Reads a user session token
         :return: the user token1
