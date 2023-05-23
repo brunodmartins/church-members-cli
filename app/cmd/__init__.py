@@ -49,3 +49,15 @@ def get_member(member_id):
     except Exception as e:
         click.echo(click.style(e, fg="red"), err=True, color=True)
         logging.exception("Error getting member")
+
+
+@click.command("search-member")
+@click.option("--name", prompt="Name", help="The member name")
+def search_member(name):
+    try:
+        token = __authentication_service.get_token()
+        result = __member_service.search_member(name, token)
+        click.echo(json.dumps(result, indent=4, sort_keys=True, ensure_ascii=False))
+    except Exception as e:
+        click.echo(click.style(e, fg="red"), err=True, color=True)
+        logging.exception("Error searching member")
