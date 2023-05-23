@@ -6,7 +6,7 @@ from app.internal.service import ChurchMembersService, AuthenticationService
 from tests.internal import (
     MOCK_MEMBER,
     MEMBER_ID,
-    TOKEN, USER, PASSWORD
+    TOKEN, USER, PASSWORD, MOCK_SEARCH
 )
 
 
@@ -28,6 +28,12 @@ class ChurchMemberServiceTestCase(unittest.TestCase):
         with self.assertRaises(Exception):
             self.service.get_member(MEMBER_ID, TOKEN)
         self.gateway.get_member.assert_called_with(MEMBER_ID, TOKEN)
+
+    def test_search_member_success(self):
+        self.gateway.search_member = MagicMock(return_value=MOCK_SEARCH)
+        result = self.service.search_member("member-name", TOKEN)
+        self.assertEqual(MOCK_SEARCH, result)
+        self.gateway.search_member.assert_called_with("member-name", TOKEN)
 
 
 class AuthenticationServiceTestCase(unittest.TestCase):

@@ -19,6 +19,15 @@ class ChurchMembersService:
         """
         return self.gateway.get_member(member_id, token)
 
+    def search_member(self, member_name: str, token: str) -> dict:
+        """
+        Search a member
+        :param member_name: The member name
+        :param token: Access token
+        :return: a member object
+        """
+        return self.gateway.search_member(member_name, token)
+
 
 class AuthenticationService:
     """
