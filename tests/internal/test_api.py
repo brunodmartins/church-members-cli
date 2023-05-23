@@ -13,7 +13,7 @@ from tests.internal import (
     MOCK_MEMBER,
     USER,
     PASSWORD,
-    MOCK_CHURCH_ID,
+    MOCK_CHURCH_ID, MOCK_SEARCH,
 )
 
 
@@ -79,6 +79,30 @@ class APITestCase(unittest.TestCase):
                     "church_id": MOCK_CHURCH_ID,
                     "Authorization": "Basic ZmFrZS11c2VyOmZha2UtcGFzc3dvcmQ=",
                 },
+            )
+
+    @patch("app.internal.api.requests")
+    def test_search_member_success(self, requests):
+        mock_response = Response()
+        mock_response.status_code = 200
+        mock_response.json = MagicMock(return_value=MOCK_SEARCH)
+        requests.get.return_value = mock_response
+        self.assertEqual(MOCK_SEARCH, self.gateway.search_member("member-name", TOKEN))
+        requests.get.assert_called_with(
+            f"{MOCK_HOST}/members?name=member-name", headers={"X-Auth-Token": TOKEN}
+        )
+
+    @patch("app.internal.api.requests")
+    def test_search_member_fails(self, requests):
+        test_cases = {403: ForbiddenException, 500: Exception}
+        for status_code in test_cases.keys():
+            mock_response = Response()
+            mock_response.status_code = status_code
+            requests.get.return_value = mock_response
+            with self.assertRaises(test_cases[status_code]):
+                self.gateway.search_member("member-name", TOKEN)
+            requests.get.assert_called_with(
+                f"{MOCK_HOST}/members?name=member-name", headers={"X-Auth-Token": TOKEN}
             )
 
 

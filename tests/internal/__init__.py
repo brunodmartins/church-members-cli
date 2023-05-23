@@ -29,3 +29,19 @@ MOCK_MEMBER = {
         },
     },
 }
+
+MOCK_SEARCH = [
+    {
+        "id": MEMBER_ID,
+        "active": True,
+        "classification": "Teen",
+        "person": {
+            "firstName": "John",
+            "lastName": "Doe",
+            "fullName": "John Doe",
+            "gender": "N",
+            "age": 16,
+            "birthDate": "2007-04-17T03:00:00Z"
+        }
+    }
+]

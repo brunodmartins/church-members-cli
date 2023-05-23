@@ -58,3 +58,22 @@ class ChurchMembersGateway:
                 f"Error getting member. Status Code: {response.status_code} Message: {message}"
             )
         return response.json()
+
+    def search_member(self, name: str, token: str) -> list:
+        """
+        Search a member by
+        :param name: the member name
+        :param token: The access token
+        :return: a list containing the members name
+        """
+        url = f"{self.host}/members?name={name}"
+        headers = {"X-Auth-Token": token}
+        response = requests.get(url, headers=headers)
+        if response.status_code == 403:
+            raise ForbiddenException("Forbidden. Please, check login information")
+        if response.status_code != 200:
+            message = response.text
+            raise Exception(
+                f"Error searching member. Status Code: {response.status_code} Message: {message}"
+            )
+        return response.json()
