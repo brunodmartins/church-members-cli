@@ -4,6 +4,7 @@ from datetime import datetime
 
 import click
 
+from app.cmd import utils
 from app.internal import service, api
 from app.internal.config import CONFIG_PATH, Configuration
 
@@ -50,16 +51,19 @@ def get_member(member_id, format_type):
         member = __member_service.get_member(member_id, token)
         if format_type == "text":
             person = member["person"]
-            click.echo(click.style('Nome: ', fg='blue') + person["fullName"])
-            fmt_birth_date = datetime.strptime(person["birthDate"], "%Y-%m-%dT%H:%M:%SZ").strftime("%d/%m/%Y")
-            click.echo(click.style('Dt. Nascimento: ', fg='blue') + fmt_birth_date)
+            form = {
+                "Nome": person["fullName"],
+                'Dt. Nascimento': datetime.strptime(person["birthDate"], "%Y-%m-%dT%H:%M:%SZ").strftime("%d/%m/%Y")
+            }
             if "contact" in person:
                 if "cellphone" in person["contact"]:
-                    click.echo(click.style('Celular: ', fg='blue') + person["contact"]["cellphone"])
+                    form['Celular'] = person["contact"]["cellphone"]
                 if "phone" in person["contact"]:
+                    form['Telefone'] = person["contact"]["phone"]
                     click.echo(click.style('Telefone: ', fg='blue') + person["contact"]["phone"])
                 if "email" in person["contact"]:
-                    click.echo(click.style('Email: ', fg='blue') + person["contact"]["email"])
+                    form['Email'] = person["contact"]["email"]
+            utils.echo_form(form)
         else:
             click.echo(json.dumps(member, indent=4, sort_keys=True, ensure_ascii=False))
     except Exception as e:
