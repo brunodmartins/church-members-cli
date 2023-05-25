@@ -1,5 +1,6 @@
 import json
 import logging
+from datetime import datetime
 
 import click
 
@@ -41,11 +42,26 @@ def login(user, password):
 
 @click.command("get-member")
 @click.option("--member-id", prompt="Member ID", help="The member ID")
-def get_member(member_id):
+@click.option('--format-type',
+              type=click.Choice(['json', 'text'], case_sensitive=False))
+def get_member(member_id, format_type):
     try:
         token = __authentication_service.get_token()
         member = __member_service.get_member(member_id, token)
-        click.echo(json.dumps(member, indent=4, sort_keys=True, ensure_ascii=False))
+        if format_type == "text":
+            person = member["person"]
+            click.echo(click.style('Nome: ', fg='blue') + person["fullName"])
+            fmt_birth_date = datetime.strptime(person["birthDate"], "%Y-%m-%dT%H:%M:%SZ").strftime("%d/%m/%Y")
+            click.echo(click.style('Dt. Nascimento: ', fg='blue') + fmt_birth_date)
+            if "contact" in person:
+                if "cellphone" in person["contact"]:
+                    click.echo(click.style('Celular: ', fg='blue') + person["contact"]["cellphone"])
+                if "phone" in person["contact"]:
+                    click.echo(click.style('Telefone: ', fg='blue') + person["contact"]["phone"])
+                if "email" in person["contact"]:
+                    click.echo(click.style('Email: ', fg='blue') + person["contact"]["email"])
+        else:
+            click.echo(json.dumps(member, indent=4, sort_keys=True, ensure_ascii=False))
     except Exception as e:
         click.echo(click.style(e, fg="red"), err=True, color=True)
         logging.exception("Error getting member")
