@@ -53,11 +53,25 @@ def get_member(member_id):
 
 @click.command("search-member")
 @click.option("--name", prompt="Name", help="The member name")
-def search_member(name):
+@click.option("--select", is_flag=True)
+def search_member(name, select):
     try:
         token = __authentication_service.get_token()
         result = __member_service.search_member(name, token)
-        click.echo(json.dumps(result, indent=4, sort_keys=True, ensure_ascii=False))
+        if select:
+            index = 1
+            for member in result:
+                member_name = member["person"]["fullName"]
+                click.echo(f"{index}) {member_name}")
+                index = index + 1
+            choice = click.prompt('Select a member', type=int)
+            choice = choice - 1
+            if choice > len(result) or choice < 0:
+                raise Exception("Invalid option")
+            member = __member_service.get_member(result[choice]["id"], token)
+            click.echo(json.dumps(member, indent=4, sort_keys=True, ensure_ascii=False))
+        else:
+            click.echo(json.dumps(result, indent=4, sort_keys=True, ensure_ascii=False))
     except Exception as e:
         click.echo(click.style(e, fg="red"), err=True, color=True)
         logging.exception("Error searching member")
