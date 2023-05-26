@@ -3,6 +3,7 @@ import logging
 from datetime import datetime
 
 import click
+from rich.pretty import pprint
 
 from app.cmd import utils
 from app.internal import service, api
@@ -65,7 +66,7 @@ def get_member(member_id, format_type):
                     form['Email'] = person["contact"]["email"]
             utils.echo_form(form)
         else:
-            click.echo(json.dumps(member, indent=4, sort_keys=True, ensure_ascii=False))
+            pprint(member, indent_guides=False)
     except Exception as e:
         click.echo(click.style(e, fg="red"), err=True, color=True)
         logging.exception("Error getting member")
@@ -91,7 +92,7 @@ def search_member(name, select):
             member = __member_service.get_member(result[choice]["id"], token)
             click.echo(json.dumps(member, indent=4, sort_keys=True, ensure_ascii=False))
         else:
-            click.echo(json.dumps(result, indent=4, sort_keys=True, ensure_ascii=False))
+            pprint(result, expand_all=True, indent_guides=False)
     except Exception as e:
         click.echo(click.style(e, fg="red"), err=True, color=True)
         logging.exception("Error searching member")
