@@ -6,11 +6,11 @@ import click
 from rich.pretty import pprint
 
 from app.cmd import utils
-from app.internal import service, api
+from app.internal import service, api, authentication
 from app.internal.config import CONFIG_PATH, Configuration
 
 __gateway = api.ChurchMembersGateway()
-__authentication_service = service.AuthenticationService(__gateway)
+__authentication_service = authentication.AuthenticationService(__gateway)
 __member_service = service.ChurchMembersService(__gateway)
 
 
@@ -48,8 +48,7 @@ def login(user, password):
               type=click.Choice(['json', 'text'], case_sensitive=False))
 def get_member(member_id, format_type):
     try:
-        token = __authentication_service.get_token()
-        member = __member_service.get_member(member_id, token)
+        member = __member_service.get_member(member_id)
         if format_type == "text":
             person = member["person"]
             form = {

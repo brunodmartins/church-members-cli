@@ -2,7 +2,8 @@ import unittest
 from unittest.mock import MagicMock
 
 from app.internal.api import ChurchMembersGateway
-from app.internal.service import ChurchMembersService, AuthenticationService
+from app.internal.authentication import AuthenticationService
+from app.internal.service import ChurchMembersService
 from tests.internal import (
     MOCK_MEMBER,
     MEMBER_ID,
@@ -19,19 +20,19 @@ class ChurchMemberServiceTestCase(unittest.TestCase):
 
     def test_get_member_success(self):
         self.gateway.get_member = MagicMock(return_value=MOCK_MEMBER)
-        member = self.service.get_member(MEMBER_ID, TOKEN)
+        member = self.service.get_member(MEMBER_ID, token=TOKEN)
         self.assertDictEqual(member, MOCK_MEMBER)
         self.gateway.get_member.assert_called_with(MEMBER_ID, TOKEN)
 
     def test_get_member_fails(self):
         self.gateway.get_member = MagicMock(side_effect=Exception)
         with self.assertRaises(Exception):
-            self.service.get_member(MEMBER_ID, TOKEN)
+            self.service.get_member(MEMBER_ID, token=TOKEN)
         self.gateway.get_member.assert_called_with(MEMBER_ID, TOKEN)
 
     def test_search_member_success(self):
         self.gateway.search_member = MagicMock(return_value=MOCK_SEARCH)
-        result = self.service.search_member("member-name", TOKEN)
+        result = self.service.search_member("member-name", token=TOKEN)
         self.assertEqual(MOCK_SEARCH, result)
         self.gateway.search_member.assert_called_with("member-name", TOKEN)
 
